@@ -1,12 +1,6 @@
 from zenml.repository import Repository
 from zenml.pipelines import pipeline
 
-from steps.encoder import encode_columns_and_clean
-from steps.importer import import_season_schedule, SeasonScheduleConfig
-from steps.model_picker import model_picker
-from steps.predictor import predictor
-from steps.splitter import get_coming_week_data, TimeWindowConfig
-
 
 @pipeline(enable_cache=False)
 def inference_pipeline(
@@ -29,6 +23,12 @@ def inference_pipeline(
 
 
 if __name__ == "__main__":
+    from steps.encoder import encode_columns_and_clean
+    from steps.importer import import_season_schedule, SeasonScheduleConfig
+    from steps.model_picker import model_picker
+    from steps.predictor import predictor
+    from steps.splitter import get_coming_week_data, TimeWindowConfig
+
     # Initialize the pipeline
     inference_pipeline = inference_pipeline(
         importer=import_season_schedule(

@@ -1,10 +1,5 @@
 from zenml.pipelines import pipeline
 
-from steps.importer import game_data_importer
-from steps.splitter import date_based_splitter, SplitConfig
-from steps.analyzer import analyze_drift
-from steps.profiler import drift_detecter
-
 CURRY_FROM_DOWNTOWN = '2016-02-27'
 
 
@@ -24,6 +19,11 @@ def one_shot_drift_detector(
 
 
 if __name__ == "__main__":
+    from steps.importer import game_data_importer
+    from steps.splitter import date_based_splitter, SplitConfig
+    from steps.analyzer import analyze_drift
+    from steps.profiler import drift_detecter
+
     # Initialize the pipeline
     one_shot_pipeline = one_shot_drift_detector(
         importer=game_data_importer(),

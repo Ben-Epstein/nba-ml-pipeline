@@ -21,13 +21,15 @@ DEFAULT_FILENAME = 'label_encoder'
 class SklearnLEMaterializer(BaseMaterializer):
     """Materializer to read data to and from sklearn."""
 
-    ASSOCIATED_TYPES = [preprocessing.LabelEncoder]
+    ASSOCIATED_TYPES = [preprocessing.LabelEncoder,
+                        preprocessing.OneHotEncoder]
 
     ASSOCIATED_ARTIFACT_TYPES = [ModelArtifact]
 
     def handle_input(
             self, data_type: Type[Any]
-    ) -> Union[preprocessing.LabelEncoder]:
+    ) -> Union[preprocessing.LabelEncoder,
+               preprocessing.OneHotEncoder]:
         """Reads a base sklearn label encoder from a pickle file."""
         super().handle_input(data_type)
         filepath = os.path.join(self.artifact.uri, DEFAULT_FILENAME)
@@ -37,7 +39,8 @@ class SklearnLEMaterializer(BaseMaterializer):
 
     def handle_return(
             self,
-            clf: Union[preprocessing.LabelEncoder],
+            clf: Union[preprocessing.LabelEncoder,
+                       preprocessing.OneHotEncoder],
     ) -> None:
         """Creates a pickle for a sklearn label encoder.
 
@@ -79,10 +82,10 @@ def apply_encoder(label_encoder: preprocessing.LabelEncoder,
 
 
 @step(enable_cache=False)
-def encoder(pandas_df: pd.DataFrame) -> Output(
+def data_encoder(pandas_df: pd.DataFrame) -> Output(
     encoded_data=pd.DataFrame,
     le_seasons=preprocessing.LabelEncoder,
-    ohe_teams=preprocessing.LabelEncoder):
+    ohe_teams=preprocessing.OneHotEncoder):
     # convert categorical to ints
     le_seasons = preprocessing.LabelEncoder()
     le_seasons.fit(pandas_df['SEASON_ID'])
