@@ -1,13 +1,13 @@
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
-from zenml.pipelines import pipeline
+from zenml.pipelines import pipeline, Schedule
 
 last_week = date.today() - timedelta(days=7)
 ONE_WEEK_AGO = last_week.strftime("%Y-%m-%d")
 CURRY_FROM_DOWNTOWN = '2016-02-27'
 
 
-@pipeline
+@pipeline(enable_cache=False)
 def training_pipeline(
         importer,
         feature_engineerer,
@@ -18,7 +18,7 @@ def training_pipeline(
 
         drift_splitter,
         drift_detector,
-        drift_analyzer
+        drift_alert
 ):
     """Links all the steps together in a pipeline"""
     # Training pipeline
@@ -32,18 +32,18 @@ def training_pipeline(
     # drift
     reference_dataset, comparison_dataset = drift_splitter(raw_data)
     drift_report, _ = drift_detector(reference_dataset, comparison_dataset)
-    drift_analyzer(drift_report)
+    drift_alert(drift_report)
 
 
 if __name__ == "__main__":
-    from ..steps.analyzer import analyze_drift
+    from ..steps.discord_bot import discord_alert
     from ..steps.encoder import data_encoder
     from ..steps.evaluator import tester
     from ..steps.feature_engineer import feature_engineer
     from ..steps.importer import game_data_importer
     from ..steps.profiler import evidently_drift_detector
     from ..steps.splitter import sklearn_splitter, SklearnSplitterConfig, \
-        refercence_data_splitter, TrainingSplitConfig
+        reference_data_splitter, TrainingSplitConfig
     from ..steps.trainer import random_forest_trainer
 
     # Initialize the pipeline
@@ -57,7 +57,7 @@ if __name__ == "__main__":
         trainer=random_forest_trainer(),
         tester=tester(),
         # Drift detection
-        drift_splitter=refercence_data_splitter(
+        drift_splitter=reference_data_splitter(
             TrainingSplitConfig(
                 new_data_split_date=ONE_WEEK_AGO,
                 start_reference_time_frame=CURRY_FROM_DOWNTOWN,
@@ -65,9 +65,9 @@ if __name__ == "__main__":
                 columns=["FG3M"])
         ),
         drift_detector=evidently_drift_detector,
-        drift_analyzer=analyze_drift(),
+        drift_alert=discord_alert(),
     )
 
-    training_pipeline.run()
-
-
+    training_pipeline.run(
+        Schedule(start_time=datetime.now(), interval_seconds=30)
+    )
