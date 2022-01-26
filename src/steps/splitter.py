@@ -106,7 +106,7 @@ class TrainingSplitConfig(BaseStepConfig):
 
 
 @step
-def refercence_data_splitter(
+def reference_data_splitter(
         dataset: pd.DataFrame,
         config: TrainingSplitConfig
 ) -> Output(before=pd.DataFrame, after=pd.DataFrame):
