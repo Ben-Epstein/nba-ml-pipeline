@@ -1,2 +1,3 @@
 zenml
 nba-api
+sklearn
