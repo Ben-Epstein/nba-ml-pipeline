@@ -19,10 +19,10 @@ def data_analysis_pipeline(
 
 
 if __name__ == "__main__":
-    from src.steps.importer import game_data_importer
-    from src.steps.splitter import date_based_splitter, SplitConfig
-    from src.steps.analyzer import analyze_drift
-    from src.steps.profiler import evidently_drift_detector
+    from steps.importer import game_data_importer
+    from steps.splitter import date_based_splitter, SplitConfig
+    from steps.analyzer import analyze_drift
+    from steps.profiler import evidently_drift_detector
 
     # Initialize the pipeline
     eda_pipeline = data_analysis_pipeline(

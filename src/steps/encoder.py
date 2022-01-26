@@ -13,7 +13,7 @@ from zenml.io import fileio
 from sklearn import preprocessing
 from zenml.steps import step
 
-from src.steps.utils import get_label_encoder, apply_encoder
+from .utils import get_label_encoder, apply_encoder
 
 DEFAULT_FILENAME = 'label_encoder'
 

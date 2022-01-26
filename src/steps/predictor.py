@@ -3,7 +3,7 @@ import pandas as pd
 from zenml.steps import step
 from sklearn.base import RegressorMixin
 
-from src.steps.utils import get_label_encoder
+from .utils import get_label_encoder
 
 
 @step

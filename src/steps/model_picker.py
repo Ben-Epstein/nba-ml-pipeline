@@ -36,4 +36,7 @@ def model_picker() -> Output(model=RegressorMixin,
                 best_score = mae
                 best_run = run.name
 
+    print(f'Choosing model from pipeline run: {best_run} with mae of '
+          f'{best_score}')
+
     return best_model, best_run
