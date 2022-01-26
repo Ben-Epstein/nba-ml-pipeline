@@ -3,7 +3,7 @@ from datetime import date, timedelta, datetime
 from zenml.pipelines import pipeline, Schedule
 
 
-@pipeline(enable_cache=False, requirements_file='requirements.txt')
+@pipeline(enable_cache=False, requirements_file='requirements_kubeflow.txt')
 def training_pipeline(
         importer,
         feature_engineerer,
